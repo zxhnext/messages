@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>仿QQ发表说说功能</title>
+	<style type="text/css">
+		*{margin:0;padding: 0}
+		body{
+			background: url('images/bg.jpg');
+			background-size: cover;
+		}
+		.text-box{
+			width: 640px;
+			height: 180px;
+			background: #ffffff;
+			margin:100px auto 0;
+			border-radius: 5px;
+		}
+		.text-box .title{
+			font-size: 12px;
+			line-height: 35px;
+			color: #666;
+			text-indent: 2em;
+		}
+		.text-box .text{
+			width: 600px;
+			height: 75px;
+			margin: 0 auto;
+			border-radius: 5px;
+			border:1px solid #ddd;
+		}
+		.text-box .mess{
+			width: 600px;
+			height: 30px;
+			margin:15px auto 0;
+			position: relative;
+		}
+		.text-box .mess .pages{
+			float: left;
+			cursor: pointer;
+		}
+		.text-box .mess .btn{
+			float: right;
+			background: #ff8140;
+			padding: 5px 15px;
+			color: #fff;
+			font-size: 12px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		.text-box .mess .pic{
+			width: 390px;
+			background: #fff;
+			position: absolute;
+			top: 25px;
+			padding: 5px;
+			display: none;
+		}
+		.text-box .mess .pic ul li{
+			list-style: none;
+			float: left;
+			margin:2px;
+		}
+		.main{
+			width: 640px;
+			margin:20px auto 0;
+		}
+		.main .content{
+			width: 640px;
+			background: #fff;
+			margin-bottom: 10px;
+		}
+		.main .content .title{
+			width: 600px;
+			height: 70px;
+			margin:0 auto;
+			border-bottom: 1px dotted #666;
+			padding:5px 0;
+		}
+		.main .content .title img{
+			width: 70px;
+			height: 70px;
+			border-radius: 50%;
+		}
+		.main .content .txt{
+			width: 600px;
+			margin: 0 auto;
+			line-height: 35px;
+		}
+	</style>
+</head>
+<body>
+	<div class="text-box">
+		<div class="title">有什么新鲜事想告诉大家?</div>
+		<div class="text" contenteditable="true"></div>
+		<div class="mess">
+			<img class="pages" src="images/bba_thumb.gif">
+			<span class="btn">发表</span>
+			<div class="pic">
+				<ul>
+					<li><img src="images/88_thumb.gif"></li>
+					<li><img src="images/angrya_thumb.gif"></li>
+					<li><img src="images/bba_thumb.gif"></li>
+					<li><img src="images/boboshengmenqi_thumb.gif"></li>
+					<li><img src="images/boboshengmenqi_thumb.gif"></li>
+					<li><img src="images/bs_thumb.gif"></li>
+					<li><img src="images/bs2_thumb.gif"></li>
+					<li><img src="images/bz_thumb.gif"></li>
+					<li><img src="images/cake.gif"></li>
+					<li><img src="images/camera_thumb.gif"></li>
+					<li><img src="images/cat_yunqizhong_thumb.gif"></li>
+					<li><img src="images/cf_thumb.gif"></li>
+					<li><img src="images/chn_buyaoya_thumb.gif"></li>
+					<li><img src="images/cj_thumb.gif"></li>
+					<li><img src="images/clock_thumb.gif"></li>
+					<li><img src="images/come_thumb.gif"></li>
+					<li><img src="images/cool_thumb.gif"></li>
+					<li><img src="images/crazya_thumb.gif"></li>
+					<li><img src="images/cry.gif"></li>
+					<li><img src="images/cza_thumb.gif"></li>
+					<li><img src="images/daxiongleibenxiong_thumb.gif"></li>
+					<li><img src="images/dizzya_thumb.gif"></li>
+					<li><img src="images/fuyun_thumb.gif"></li>
+					<li><img src="images/gbzkun_thumb.gif"></li>
+					<li><img src="images/geili_thumb.gif"></li>
+					<li><img src="images/good_thumb.gif"></li>
+					<li><img src="images/gza_thumb.gif"></li>
+					<li><img src="images/h_thumb.gif"></li>
+					<li><img src="images/hatea_thumb.gif"></li>
+					<li><img src="images/hearta_thumb.gif"></li>
+					<li><img src="images/heia_thumb.gif"></li>
+					<li><img src="images/horse2_thumb.gif"></li>
+					<li><img src="images/hsa_thumb.gif"></li>
+					<li><img src="images/hufen_thumb.gif"></li>
+					<li><img src="images/j_thumb.gif"></li>
+					<li><img src="images/k_thumb.gif"></li>
+					<li><img src="images/kbsa_thumb.gif"></li>
+					<li><img src="images/kl_thumb.gif"></li>
+					<li><img src="images/laugh.gif"></li>
+					<li><img src="images/lazu_thumb.gif"></li>
+					<li><img src="images/ldln_thumb.gif"></li>
+					<li><img src="images/liwu_thumb.gif"></li>
+					<li><img src="images/lovea_thumb.gif"></li>
+					<li><img src="images/lxhluguo_thumb.gif"></li>
+					<li><img src="images/lxhzhuanfa_thumb.gif"></li>
+					<li><img src="images/m_thumb.gif"></li>
+					<li><img src="images/mb_thumb.gif"></li>
+					<li><img src="images/money_thumb.gif"></li>
+					<li><img src="images/nm_thumb.gif"></li>
+					<li><img src="images/no_thumb.gif"></li>
+					<li><img src="images/ok_thumb.gif"></li>
+					<li><img src="images/otm_thumb.gif"></li>
+					<li><img src="images/panda_thumb.gif"></li>
+					<li><img src="images/pig.gif"></li>
+					<li><img src="images/qq_thumb.gif"></li>
+					<li><img src="images/rabbit_thumb.gif"></li>
+					<li><img src="images/sad_thumb.gif"></li>
+					<li><img src="images/sada_thumb.gif"></li>
+					<li><img src="images/sb_thumb.gif"></li>
+					<li><img src="images/shamea_thumb.gif"></li>
+					<li><img src="images/sk_thumb.gif"></li>
+					<li><img src="images/sleepa_thumb.gif"></li>
+					<li><img src="images/sleepya_thumb.gif"></li>
+					<li><img src="images/smilea_thumb.gif"></li>
+					<li><img src="images/sw_thumb.gif"></li>
+					<li><img src="images/sweata_thumb.gif"></li>
+					<li><img src="images/t_thumb.gif"></li><li><img src="images/tootha_thumb.gif"></li>
+					<li><img src="images/tza_thumb.gif"></li>
+					<li><img src="images/unheart.gif"></li>
+					<li><img src="images/vw_thumb.gif"></li>
+					<li><img src="images/weijin_thumb.gif"></li>
+					<li><img src="images/wg_thumb.gif"></li>
+					<li><img src="images/wq_thumb.gif"></li>
+					<li><img src="images/x_thumb.gif"></li>
+					<li><img src="images/ye_thumb.gif"></li>
+					<li><img src="images/yhh_thumb.gif"></li>
+					<li><img src="images/youqian_thumb.gif"></li>
+					<li><img src="images/yw_thumb.gif"></li>
+					<li><img src="images/yx_thumb.gif"></li>
+					<li><img src="images/z2_thumb.gif"></li>
+					<li><img src="images/zhh_thumb.gif"></li>
+					<li><img src="images/zy_thumb.gif"></li>
+					<li><img src="images/zz2_thumb.gif"></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="main">
+		<!-- <div class="content">
+			<div class="title"><img src="images/arrow.jpg" align="absmiddle">&nbsp&nbsp&nbsp&nbsp树深时见鹿</div>
+			<div class="txt">有什么新鲜事想告诉大家?</div>
+		</div> -->
+	</div>
+	<script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//点击发表
+		$('.btn').click(function(){
+			var Txt = $('.text').html();//拿到里面的结构,包括标签
+			if(Txt == ''){
+				$('.text').focus();
+			}else{
+				$('.main').append('<div class="content"><div class="title"><img src="images/arrow.jpg" align="absmiddle">&nbsp&nbsp&nbsp&nbsp树深时见鹿</div><div class="txt">'+Txt+'</div></div>');
+				$('.text').html('');
+			}
+		});
+		//点击表情
+		$('.pages').click(function(e){
+			//点击展开
+			$('.pic').slideDown(300);
+			e.stopPropagation();//阻止冒泡,否则点击时会同事触发slideUp()
+		});
+			//点击文档任何地方表情收起
+		$(document).click(function(){
+			$('.pic').slideUp(300);
+		});
+		//添加表情
+		$('.pic ul li').click(function(){
+			var img = $(this).find('img').clone();//克隆表情图片
+			$('.text').append(img);
+		})
+	</script>
+</body>
+</html>
+<!-- contenteditable="true"将div变成文本输入框 
+	align="absmiddle"图片文字和图片对齐方式
+-->
