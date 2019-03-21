@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>苹果相册系统</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			background: #000;
+			overflow: hidden;
+		}
+		#pic{
+			height: 250px;
+			margin-top: 150px;
+			position: relative;
+			transform-style: preserve-3d;/*设置3d场景*/
+			perspective: 800px; /*场景景深 在800像素外去看*/
+		}
+		#pic img{
+			position: absolute;
+			top: 0;
+			width: 300px;
+			height: 250px;
+			-webkit-box-reflect:below 0
+			-webkit-linear-gradient(top,rgba(0,0,0,.1),rgba(0,0,0,.5));  /*倒影 往下 紧贴着  倒影线性变化*/
+			transition: 0.5s;
+			cursor: pointer;
+		}
+		#pic img.front{
+			transform: rotateY(45deg) translateZ(-100px);
+		}
+		#pic img.back{
+			transform: rotateY(-45deg) translateZ(-100px);
+		}
+		#pic img.now{
+			transform: translateZ(100px);
+		}
+	</style>
+</head>
+<body>
+	<div id="pic">
+		<img src="images/1.jpg" alt="" width="400" height="225" />
+		<img src="images/2.jpg" alt="" width="400" height="225" />
+		<img src="images/3.jpg" alt="" width="400" height="225" />
+		<img src="images/4.jpg" alt="" width="400" height="225" />
+		<img src="images/5.jpg" alt="" width="400" height="225" />
+		<img src="images/6.jpg" alt="" width="400" height="225" />
+		<img src="images/7.jpg" alt="" width="400" height="225" />
+		<img src="images/8.jpg" alt="" width="400" height="225" />
+		<img src="images/9.jpg" alt="" width="400" height="225" />
+		<img src="images/10.jpg" alt="" width="400" height="225" />
+		<img src="images/11.jpg" alt="" width="400" height="225" />
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript">
+		(function(){
+			var imgLen = $('img').length;
+			var midIndex = Math.floor(imgLen/2);
+			var imgLeft = [];
+
+			for (var i = 0; i < imgLen; i++) {
+				if (i<midIndex) {
+					$('img').eq(i).addClass('front');
+				}else if (i>midIndex) {
+					$('img').eq(i).addClass('back');
+				}else{
+					$('img').eq(i).addClass('now');
+				}
+			}
+			function mid() {
+				var oWid = $(window).width();
+				$('.now').css('left', oWid / 2 - 150 + 'px');
+				var mIndex = $('.now').index();
+				for (var i = 0; i < imgLen; i++) {
+					$('img').eq(i).css('left', oWid / 2 - 150 - (mIndex - i) * 100);
+					imgLeft[i] = parseInt($('img').eq(i).css('left'));
+				}
+			}
+			mid();
+			$(window).resize(function () {
+				mid();
+			});
+			$('img').click(function () {
+				var nowIndex = $(this).index();
+				for (var i = 0; i < imgLen; i++) {
+					imgLeft[i] -= 100 * (nowIndex - midIndex);
+					$('img').eq(i).css('left', imgLeft[i] + 'px');
+				}
+				for (var i = 0; i < imgLen; i++) {
+
+					if (i < nowIndex) {
+						$('img').eq(i).removeClass().addClass('front');
+					} else if (i > nowIndex) {
+						$('img').eq(i).removeClass().addClass('back');
+					} else {
+						$('img').eq(i).removeClass().addClass('now');
+					}
+				}
+				midIndex = nowIndex;
+			});
+		})()
+		
+	</script>
+</body>
+</html>

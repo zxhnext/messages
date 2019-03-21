@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>音乐播放器</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		body{
+			background: rgb(55,76,86);
+		}
+		.photo{
+			width: 320px;
+			height: 800px;
+			margin:100px auto 0 auto;
+			background: #000;
+			font-family: "微软雅黑";
+			padding: 5px;
+			background-color: #222;
+			border-radius: 20px;
+			box-shadow: 0 0 7px #fff;
+			overflow:hidden;
+		}
+		.top{
+			width: 320px;
+			height: 23px;
+			background: url(images/1.png) no-repeat;
+		}
+		.title{
+			width: 320px;
+			height: 30px;
+			background: url(images/2.png) no-repeat;
+			font-size: 20px;
+			color: #ccc;
+			font-weight: bold;
+			text-align: center;
+			line-height: 30px;
+		}
+		.play{
+			width: 190px;
+			height: 190px;
+			background: url(images/3.png) no-repeat;
+			margin:auto;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		.singer{
+			width: 320px;
+			font-size: 14px;
+			color: #ccc;
+			text-align: center;
+			line-height: 40px;
+		}
+		.lrc{
+			width: 300px;
+			height: 285px;
+			margin:20px auto;
+			text-align: center;
+			overflow: hidden;
+			color: #ccc;
+		}
+		.lrc p{
+			line-height: 20px;
+			font-size: 12px;
+		}
+		.content{
+			position: relative;
+			left: 0;
+			top:0;
+		}
+		.play.rotate{
+			-webkit-animation:rot 5s linear infinite;
+			-moz-animation:rot 5s linear infinite;
+			-ms-animation:rot 5s linear infinite;
+			-o-animation:rot 5s linear infinite;
+			animation:rot 5s linear infinite;
+		}
+		@keyframes rot{
+			from{transform:rotate(0deg);}
+			to{transform:rotate(360deg);}
+		}
+		#canvas{
+			background: #222;
+			display: block;
+			margin:auto;
+		}
+	</style>
+</head>
+<body>
+	<textarea name="" id="txt" style="display: none;">
+		[00:00.64]小幸运 - 谭嘉仪
+		[00:02.15]词：徐世珍&吴辉福
+		[00:03.70]曲：JerryC
+		[00:04.14]编曲：JerryC
+		[00:13.77]我听见雨滴落在青青草地
+		[00:19.89]我听见远方下课钟声响起
+		[00:25.74]可是我没有听见你的声音
+		[00:30.74]认真 呼唤我姓名
+		[00:37.92]爱上你的时候还不懂感情
+		[00:44.12]离别了才觉得刻骨 铭心
+		[00:50.09]为什么没有发现遇见了你
+		[00:54.70]是生命最好的事情
+		[01:00.30]也许当时忙着微笑和哭泣
+		[01:06.36]忙着追逐天空中的流星
+		[01:12.12]人理所当然的忘记
+		[01:16.55]是谁风里雨里一直默默守护在原地
+		[01:24.44]原来你是我最想留住的幸运
+		[01:29.69]原来我们和爱情曾经靠得那么近
+		[01:35.67]那为我对抗世界的决定
+		[01:40.29]那陪我淋的雨
+		[01:43.28]一幕幕都是你 一尘不染的真心
+		[01:50.60]与你相遇 好幸运
+		[01:53.96]可我已失去为你泪流满面的权利
+		[01:59.98]但愿在我看不到的天际
+		[02:04.63]你张开了双翼
+		[02:07.68]遇见你的注定 她会有多幸运
+		[02:27.28]青春是段跌跌撞撞的旅行
+		[02:33.44]拥有着后知后觉的美丽
+		[02:39.55]来不及感谢是你给我勇气
+		[02:44.22]让我能做回我自己
+		[02:49.72]也许当时忙着微笑和哭泣
+		[02:55.55]忙着追逐天空中的流星
+		[03:01.61]人理所当然的忘记
+		[03:06.03]是谁风里雨里一直默默守护在原地
+		[03:13.79]原来你是我最想留住的幸运
+		[03:19.05]原来我们和爱情曾经靠得那么近
+		[03:25.17]那为我对抗世界的决定
+		[03:29.68]那陪我淋的雨
+		[03:32.56]一幕幕都是你 一尘不染的真心
+		[03:39.89]与你相遇 好幸运
+		[03:43.40]可我已失去为你泪流满面的权利
+		[03:49.32]但愿在我看不到的天际
+		[03:53.97]你张开了双翼
+		[03:56.98]遇见你的注定
+		[04:00.47]Oh 她会有多幸运
+	</textarea>
+	<div class="photo">
+		<div class="top"></div>
+		<div class="title">小幸运</div>
+		<div class="singer">谭佳仪</div>
+		<div class="play"></div>
+		<div class="lrc">
+			<div class="content"></div>
+		</div>
+		<audio src="mp3/谭嘉仪-小幸运.mp3" id="myMusic"></audio>
+		<canvas id="canvas" width="320" height="150"></canvas>
+	</div>
+	<script type="text/javascript">
+		var btn = document.getElementsByClassName('play')[0];
+		var myMusic = document.getElementById("myMusic");
+		var txt = document.getElementById("txt");
+		var con = document.getElementsByClassName("content")[0];
+		var mark = true;
+		var lrc = txt.value;
+		btn.onclick = function(){
+			if (mark) {
+				this.className += " rotate"; //如果直接=,将覆盖原来的类名,所以要+=,而且要加空格
+				myMusic.play();
+				mark = false;
+			}else{
+				this.className = "play";
+				myMusic.pause();
+				mark = true;
+			}
+		}
+
+		var lrcArr = lrc.split("["); //以[分割字符串
+		var html = '';
+		var len = lrcArr.length;
+		for (var i = 0; i < len; i++) {
+			var arr = lrcArr[i].split("]");
+			var time = arr[0].split("."); //获取歌曲时间
+			var timer = time[0].split(":");
+			var ms = timer[0]*60 + timer[1]*1;
+			var text = arr[1]; //获取歌词
+			if (text) {
+				html += "<p id="+ms+">"+text+"</p>"
+			}
+			con.innerHTML = html;
+		}
+		var num = 0;
+		var oP = con.getElementsByTagName("p");
+		myMusic.addEventListener("timeupdate",function(){ //监听歌曲时间,当时间变化时触发事件
+			var curTime = parseInt(this.currentTime); //获取歌曲播放时间
+			if (document.getElementById(curTime)) {
+				var length = oP.length;
+				for (var i = 0; i < length; i++) {
+					oP[i].style.cssText = "color:#ccc;font-size:12px;";
+				}
+				document.getElementById(curTime).style.cssText = "color:red;font-size:18px;"
+				if (oP[7+num].id == curTime) {
+					con.style.top = -20*num + "px";
+					num++;
+				}
+			}
+		});
+
+		//绘制音频
+		window.AudioContext = window.AudioContext||window.webkitAudioContext||window.mozAudioContext;  //H5音频对象
+		window.requestAnimFrame = (function(){
+			return window.requestAnimFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||function( callback ){
+				window.setTimeout(callback,1000/60);
+			};
+		})();  //源生JS经动画
+		var actx = new AudioContext(); //创建一个音频对象
+		var analyser = actx.createAnalyser(); //创建一个分析节点
+		var audioSrc = actx.createMediaElementSource(myMusic); //创建一个媒体源节点
+		audioSrc.connect(analyser); //把媒体源和分析节点链接
+		analyser.connect(actx.destination); //把分析机制和扬声器(目标点)链接起来
+
+		//canvas数据处理
+		var can = document.getElementById("canvas");
+		var cxt = can.getContext("2d");
+
+		var color1 = cxt.createLinearGradient(can.width*0.5,0,can.width*0.5,75);
+		color1.addColorStop(0,"#00f");
+		color1.addColorStop(0.5,"#f00");
+		color1.addColorStop(1,"#0f0");
+		var color2 = cxt.createLinearGradient(can.width*0.5,75,can.width*0.5,150);
+		color2.addColorStop(0,"#0f0");
+		color2.addColorStop(0.5,"#f00");
+		color2.addColorStop(1,"#00f");
+		
+
+		//封装绘制频谱的方法
+		var nums = 100;
+		function draw(){
+			var voicehigh = new Uint8Array(analyser.frequencyBinCount);//创建一个与音频频次等长的数组
+			analyser.getByteFrequencyData(voicehigh); //把分析到的音频数据添加到数组里面
+			//console.log(voicehigh);
+			var step = Math.round(voicehigh.length/nums);  //音频数据步长(截取一段数据)
+			//先清空画布,在绘制
+			cxt.clearRect(0,0,can.width,can.height);
+			for (var i = 0; i < nums; i++) {
+				var high = voicehigh[step*i]/3; //获取高度,如果高度太大,可除以一个数缩小
+				cxt.fillStyle = color1; //设置颜色
+				cxt.fillRect(i*10+can.width*0.5,75,7,-high+1);
+				cxt.fillRect(can.width*0.5-(i-1)*10,75,7,-high+1);
+
+				cxt.fillStyle = color2;
+				cxt.fillRect(i*10+can.width*0.5,75,7,high+1);
+				cxt.fillRect(can.width*0.5-(i-1)*10,75,7,high+1);
+			}
+			requestAnimFrame(draw);
+		}
+		draw();
+
+	</script>
+</body>
+</html>

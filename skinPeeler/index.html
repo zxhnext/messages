@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML+JS开发桌面换肤系统</title>
+	<style type="text/css">
+		*{margin:0;padding: 0;list-style: none}
+		body{background: url('http://www.zxhnext.top/skinPeeler/images/1.jpg');}
+		.menu{
+			position: fixed;
+			width: 150px;
+			height: 250px;
+			background: #ffffff;
+			box-shadow: 0 0 10px 2px #ffffff;
+			display: none;
+		}
+		.menu ul li{
+			list-style: none;
+			width: 150px;
+			height: 35px;
+			border-bottom: 1px solid #ddd;
+			line-height: 35px;
+			font-size: 12px;
+			cursor: pointer;
+		}
+		.menu ul li img{
+			margin: 0 10px 0 20px;
+		}
+		.on{
+			background: #00cccc;
+			color: #fff;
+		}
+		.pic-box{
+			width: 735px;
+			height: 360px;
+			background: rgba(0,0,0,0.5);
+			position: fixed;
+			top: 100px;
+			left: 50%;
+			margin-left: -366px;
+			display: none;
+		}
+		.pic-box .title{
+			width: 735px;
+			height: 50px;
+			background: url('http://www.zxhnext.top/skinPeeler/images/title_bg.jpg');
+			color: #fff;
+			font-size: 20px;
+			line-height: 50px;
+			text-indent: 20px;
+		}
+		.pic-box .title img{
+			float: right;
+			margin-top: 11px;
+			margin-right: 15px;
+			cursor: pointer;
+		}
+		.pic-box ul li{
+			width: 200px;
+			height: 125px;
+			border: 5px solid #fff;
+			float: left;
+			margin: 10px 17px;
+		}
+	</style>
+</head>
+<body>
+	<div class="menu">
+		<ul>
+			<li class="on"><img src="http://www.zxhnext.top/skinPeeler/images/ico1.jpg" align="absmiddle">添加应用</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico2.jpg" align="absmiddle">获取课程</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico3.jpg" align="absmiddle">添加笔记</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico4.jpg" align="absmiddle">刷新</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico5.jpg" align="absmiddle">上传资料</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico6.jpg" align="absmiddle">更换背景</li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/ico7.jpg" align="absmiddle">注销</li>
+		</ul>
+	</div>
+	<div class="pic-box">
+		<div class="title">桌面背景墙<img src="images/close.png"></div>
+		<ul>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_1.jpg"></li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_2.jpg"></li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_3.jpg"></li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_4.jpg"></li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_5.jpg"></li>
+			<li><img src="http://www.zxhnext.top/skinPeeler/images/s_6.jpg"></li>
+		</ul>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript">
+		var imgSrc = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg']
+		window.oncontextmenu = function(){return false}//禁止右键功能
+		$(document).mousedown(function(e){
+			//判断按下的是哪个键
+			var key = e.which;//获取到键值 1:左键  2:中键 3:右键
+			if (key == 3) {
+				$('.menu').show();
+				//控制菜单位置
+				var _left = e.clientX;
+				var _top = e.clientY;
+				$('.menu').css({
+					left:_left,
+					top:_top
+				})
+			}
+		});
+		//鼠标覆盖改变背景
+		$('.menu ul li').mouseover(function(){
+			$(this).addClass('on').siblings().removeClass('on');
+		});
+		$('.menu ul li').click(function(){
+			//点击更换背景时显示图片
+			if ($(this).text() === '更换背景') {
+				$('.pic-box').show();
+			}
+		});
+		$(document).click(function(){
+			$('.menu').hide();
+		});
+		//点击图片切换背景
+		$('.pic-box ul li').click(function(){
+			var i = $(this).index();
+			$('body').css({'background':"url('http://www.zxhnext.top/skinPeeler/images/"+imgSrc[i]+"')"})
+		});
+		$('.pic-box .title img').click(function(){
+			$('.pic-box').hide();
+		})
+	</script>
+</body>
+</html>
+<!-- align="absmiddle"让文字和图片上下居中,文字要设置行高,图片不用设置上下margin -->

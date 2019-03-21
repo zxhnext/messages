@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>抽屉特效</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+		}
+		#banner{
+			position: relative;
+			width: 1156px;
+			height: 400px;
+			margin:50px auto;
+			overflow: hidden;
+		}
+		#banner .item{
+			position: absolute;
+			top: 0;
+		}
+		#banner h3{
+			position: absolute;
+			top: 0;
+			height: 250px;
+			width: 16px;
+			padding: 150px 12px 0;
+			font-size: 16px;
+			margin: 0;
+			font-weight: 100;
+			background:rgba(0,0,0,.5);
+			color: #fff;
+			cursor: pointer;
+			border-left: 1px solid #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="banner">
+		<div class="item">
+			<h3>爱新鲜</h3>
+			<img src="images/1.jpg" width="996" height="400" alt="">
+		</div>
+		<div class="item">
+			<h3>一衣多穿</h3>
+			<img src="images/2.jpg" width="996" height="400" alt="">
+		</div>
+		<div class="item">
+			<h3>测评擂台</h3>
+			<img src="images/3.jpg" width="996" height="400" alt="">
+		</div>
+		<div class="item">
+			<h3>达人心经</h3>
+			<img src="images/4.jpg" width="996" height="400" alt="">
+		</div>
+		<div class="item">
+			<h3>大咖卖场</h3>
+			<img src="images/5.jpg" width="996" height="400" alt="">
+		</div>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript">
+		(function(){
+			var arr = []; //数组
+			$('.item').each(function(i){ //遍历
+				$(this).css('left',i*40+'px');
+				arr[i] = i*40;
+			});
+			$('.item h3').click(function(){
+				var index = $(this).parent().index(); //获取元素下标
+				$('.item').each(function(i){ //遍历
+					if (i <= index) {
+						$(this).animate({left:arr[i]+'px'},500);
+					}else{
+						$(this).animate({left:arr[i]+956+'px'},500);
+					}
+				});
+			});	
+		})()
+		
+	</script>
+</body>
+</html>

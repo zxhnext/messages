@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>360网址导航</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.content{
+			width: 640px;
+			height: 400px;
+			border: 1px solid #ccc;
+			margin: 50px auto;
+		}
+		.content li{
+			list-style: none;
+			float: left;
+			width: 200px;
+			height: 120px;
+			margin: 10px 0 0 10px;
+			background-color: gray;
+		}
+		.content li .item{
+			width: 200px;
+			height: 120px;
+			cursor: pointer;
+		}
+		.content .item img{
+			width: 200px;
+			height: 120px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<ul>
+			<li>
+				<div class="
+				item">
+					<img src="images/baidu.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/douban.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/people.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/renren.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/souhu.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/taobao.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/wangyi.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/xinlang.png">
+				</div>
+			</li>
+			<li>
+				<div class="
+				item">
+					<img src="images/youku.png">
+				</div>
+			</li>
+		</ul>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript">
+		function Pointer(x,y){ //鼠标坐标位置对象
+			this.x = x;
+			this.y = y;
+		}
+		function Position(left,top){//div定位值对象
+			this.left = left;
+			this.top = top;
+		}
+		$('.item').each(function(i){
+			/*浮动布局改为定位布局*/
+			this.init = function() {
+				this.box = $(this).parent();
+				$(this).attr("index",i).css({
+					position:'absolute',
+					left:this.box.offset().left,
+					top:this.box.offset().top
+				}).appendTo('.content');
+				this.drag();
+			},
+			/*拖拽功能*/
+			this.drag = function() { //拖拽功能
+				var oldPosition = new Position();
+				var oldPointer = new Pointer();
+				var isDrag = false; //判断当前div是否被拖拽了
+				var currentItem = this;//存储当前被拖拽的div元素
+				//鼠标按下去
+				$(this).mousedown(function(e){
+					isDrag = true;
+					//获取鼠标坐标位置
+					oldPointer.x = e.clientX;
+					oldPointer.y = e.clientY;
+					//获取div原来的定位值
+					oldPosition.left = $(this).position().left;
+					oldPosition.top = $(this).position().top;
+				});
+				//鼠标移动
+				$(document).mousemove(function(e){
+					//获取鼠标移动过程中的坐标位置
+					var currentPointer = new Pointer(e.clientX,e.clientY);
+					if (!isDrag) return false;
+					$(currentItem).css({
+						opacity:0.8,
+						'z-index':99
+					});
+					var _left = currentPointer.x - oldPointer.x + oldPosition.left;
+					var _top = currentPointer.y - oldPointer.y + oldPosition.top;
+					$(currentItem).css({
+						left:_left,
+						top:_top
+					});
+					//把当前的鼠标坐标对象赋值给当前节点
+					currentItem.pointer = currentPointer;
+					currentItem.impact();
+				});
+				//鼠标抬起
+				$(document).mouseup(function(){
+					if (!isDrag) return false;
+					isDrag = false;
+					currentItem.move(function(){
+						$(this).css({
+							opacity:1,
+							"z-index":0
+						});
+					});
+				});
+			},
+			//碰撞检测
+			this.impact = function(){
+				var currentItem = this;
+				var direction = '';//碰撞方向
+				$(this).siblings('.item').each(function(){
+					if (currentItem.pointer.x > this.box.offset().left && currentItem.pointer.x < this.box.offset().left + this.box.width() && currentItem.pointer.y > this.box.offset().top && currentItem.pointer.y < this.box.offset().top + this.box.height() ) {
+							console.log('碰撞成功')
+							//比较当前拖拽的div的父元素和兄弟元素的父元素的上偏移量
+							if (currentItem.box.offset().top < this.box.offset().top) {//往下碰撞成功
+								direction = "down";
+
+							}else if(currentItem.box.offset().top > this.box.offset().top){//往上碰撞成功
+									direction = "up";
+							}else{
+								//左右碰撞成功
+								direction = "normal";
+							}
+							//碰撞成功的兄弟交换位置
+							this.swap(direction,currentItem);
+					}
+				});
+			},
+			//交换位置
+			this.swap = function(direction,currentItem){
+				var directions = {
+					normal:function(){
+						var saveBox = this.box;  /*被碰撞的*/
+						this.box = currentItem.box; /*碰撞的*/
+						currentItem.box = saveBox;
+						//移动位置
+						this.move();
+						$(this).attr("index",this.box.index());
+						$(currentItem).attr("index",currentItem.box.index());
+					},
+					down:function(){
+						var node = this;
+						var box = this.box;
+						//当前拖拽盒子索引
+						var startIndex = currentItem.box.index();
+						//碰撞成功的兄弟父元素索引
+						var endIndex = this.box.index();
+						for (var i = endIndex; i > startIndex; i--) {
+							//循环获取初始索引和结束索引间的每一个item
+							var prevNode = $(".content .item[index="+(i-1)+"]")[0];
+							//依次交换每个item的父元素
+							node.box = prevNode.box;
+							$(node).attr("index",node.box.index());
+							node.move();//交换位置
+							//更改每个item的index属性值
+							node = prevNode;
+						}
+						currentItem.box = box;
+						$(currentItem).attr("index",box.index());
+					},
+					up:function(){
+						var node = this;
+						var box = this.box;
+						var startIndex = node.box.index();
+						var endIndex = currentItem.box.index();
+						for (var i = startIndex; i < endIndex; i++) {
+							var nextNode = $(".content .item[index="+(i+1)+"]")[0];
+							node.box = nextNode.box;
+							$(node).attr("index",node.box.index());
+							node.move();
+							node = nextNode;
+						}
+						currentItem.box = box;
+						$(currentItem).attr("index",box.index());
+					}
+				}
+				directions[direction].call(this); //执行函数
+			},
+			this.move = function(callback){
+				$(this).stop().animate({
+					left: this.box.offset().left,
+					top: this.box.offset().top
+				},500,function(){
+					callback&&callback.call(this);
+				});
+			},
+			this.init();
+		});
+	</script>
+</body>
+</html>

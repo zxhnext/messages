@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>天猫轮播</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.wrap{
+			position: relative;
+			margin: 100px auto;
+			width: 1000px;
+			height: 500px;
+			overflow:hidden;
+		}
+		.list{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.button{
+			position: absolute;
+			bottom: 0;
+			background: rgba(0,0,0,.2);
+			width: 1000px;
+			height: 40px;
+			text-align: center;
+		}
+		.button span{
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			border-radius: 5px;
+			background: rgba(0,255,0,.5);
+			margin: 15px 5px;
+			cursor: pointer;
+		}
+		.button .on{
+			background: rgba(0,0,255,.5);
+		}
+		.btn{
+			position: absolute;
+			top:225px;
+			width: 30px;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+			font-size: 40px;
+			color: #fff;
+			background: rgba(0,0,0,.1);
+			cursor: pointer;
+		}
+		.prev{
+			left: 10px;
+		}
+		.next{
+			right: 10px;
+		}
+		.btn:hover{
+			background: rgba(0,0,0,.5);
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="box">
+			<div class="list">
+				<img src="images/1.jpg" width="1280" height="1024" alt="" />
+			</div>
+			<div class="list">
+				<img src="images/2.jpg" width="1280" height="1024" alt="" />
+			</div>
+			<div class="list">
+				<img src="images/3.jpg" width="1280" height="1024" alt="" />
+			</div>
+			<div class="list">
+				<img src="images/4.jpg" width="1280" height="1024" alt="" />
+			</div>
+			<div class="list">
+				<img src="images/5.jpg" width="1280" height="1024" alt="" />
+			</div>
+			<div class="list">
+				<img src="images/6.jpg" width="1280" height="1024" alt="" />
+			</div>
+		</div>
+		<div class="button">
+			<span class="on"></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		<div class="prev btn">&lt</div>
+		<div class="next btn">&gt</div>
+	</div>
+	
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript">
+	(function(){
+		indexPage = 0;
+		lock = true;
+		$(function () {
+			$('.list').first().show().siblings().hide();
+		});
+		$('.prev').click(function () {
+			prev()
+		});
+		$('.next').click(function () {
+			next()
+		});
+		$('.wrap').mouseenter(function () {
+			lock = false;
+		});
+		$('.wrap').mouseleave(function () {
+			lock = true;
+		});
+		setInterval(function () {
+			if (lock) {
+				indexPage++;
+				indexPage %= $('.button span').length;
+				$('.list').eq(indexPage).fadeIn().siblings().hide();
+				$('.button span').eq(indexPage).addClass('on').siblings().removeClass('on');
+			}
+		}, 3000);
+
+		$('.button span').click(function () {
+			index = $(this).index();
+			$(this).addClass('on').siblings().removeClass('on');
+			$('.list').eq(index).fadeIn().siblings().hide();
+		});
+		function play(i) {
+			$('.list').eq(i).fadeIn().siblings().hide();
+			$('.button span').eq(i).addClass('on').siblings().removeClass('on');
+		}
+		function prev() {
+			indexPage -= 1;
+			indexPage %= $('.button span').length;
+			play(indexPage);
+		}
+		function next() {
+			indexPage += 1;
+			indexPage %= $('.button span').length;
+			play(indexPage);
+		}
+	})()
+		
+	</script>
+</body>
+</html>

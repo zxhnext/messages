@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas绘制华丽背景</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding: 0;
+		}
+		canvas{
+			display: block; /*canvas为一张图片,具有img标签特性,为行内元素,将它变为块元素,可取消滚动条*/
+			background: #000;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas">您的浏览器不支持canvas标签,请更新您的浏览器!!!</canvas>
+	<script type="text/javascript">
+		(function(){
+			var can = document.getElementById("canvas");
+			var ctx = can.getContext("2d");
+
+			var w = can.width = window.innerWidth;
+			var h = can.height = window.innerHeight;
+			window.onresize = function () {  //监听浏览器窗口变化
+				var w = can.width = window.innerWidth;
+				var h = can.height = window.innerHeight;
+			}
+
+			var dots = []; //用来存储实例化原型对象
+			//创建圆形粒子类
+			function Dot() {
+				//圆心坐标
+				this.x = Math.random() * w;
+				this.y = Math.random() * h;
+				//坐标更改速度值
+				this.vx = -0.5 + Math.random();
+				this.vy = -0.5 + Math.random();
+				//圆形半径
+				this.r = Math.random() * 5;
+
+				this.color = color3();
+
+			};
+			//给Dot原型添加(绘制)方法
+			Dot.prototype.draw = function () {
+				ctx.beginPath();
+				ctx.fillStyle = this.color;
+				ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+				ctx.fill();
+				this.update();  //更新坐标
+			}
+			//给Dot原型添加移动方法
+			Dot.prototype.update = function () {
+				if (this.x < 0 || this.x > w) {
+					this.vx = -this.vx; //当原点到达边框时反弹
+				}
+				if (this.y < 0 || this.y > h) {
+					this.vy = -this.vy;
+				}
+				this.x += this.vx;
+				this.y += this.vy;
+			}
+			//添加实例化圆形粒子
+			for (var i = 0; i < 500; i++) {
+				dots.push(new Dot())
+			}
+			//绘制出圆形粒子
+			function drawDots() {
+				ctx.clearRect(0, 0, w, h); //清空画布
+				for (var i = 0, len = dots.length; i < len; i++) {
+					dots[i].draw();
+				}
+			}
+			setInterval(drawDots, 30);
+
+			//生成随机颜色
+			function color1() {
+				var r = Math.floor(Math.random() * 256);
+				var g = Math.floor(Math.random() * 256);
+				var b = Math.floor(Math.random() * 256);
+				return "rgb(" + r + "," + g + "," + b + ")";
+			}
+			//位运算创建16进制随机颜色
+			function color2() {
+				return "#" + (~~(Math.random() * (1 << 24))).toString(16);
+			}
+
+			function color3() {
+				return "#" + function (color) {
+					//返回一个符合标准的6位的十六进制颜色值
+					return new Array(7 - color.length).join("0") + color;
+				}((Math.random() * 0x1000000 << 0).toString(16))
+			}
+		})()
+	</script>
+</body>
+</html>

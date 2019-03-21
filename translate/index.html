@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>原生js封装jsonp实现同步翻译</title>
+</head>
+<style type="text/css">
+	*{margin:0;padding: 0;list-style: none}
+	body{
+		background: #ccc;
+	}
+	.wrap{
+		margin:100px auto;
+		width: 900px;
+		height: 300px;
+		padding:10px;
+		box-shadow: 0 0 4px #222;
+	}
+	.wrap .language{
+		position: relative;
+		width: 100px;
+		height: 30px;
+		padding:0 30px;
+		margin:10px;
+		text-align: center;
+		line-height: 30px;
+		border: 1px solid #434343;
+		cursor: pointer;
+	}
+	.wrap .language .languages{
+		position: absolute;
+		top:30px;
+		left: -1px;
+		width: 360px;
+		height: auto;
+		border: 1px solid #434343;
+		display: none;
+		background: #fff;
+	}
+	.wrap .language .languages ul li{
+		float: left;
+		width: 80px;
+		height: 40px;
+		line-height: 40px;
+		margin:4px;
+		border:1px dashed #ccc;
+	}
+	.wrap .language .languages ul li:hover{
+		background: #268;
+	}
+	.wrap .input,.wrap .show{
+		width: 430px;
+		height: 180px;
+		float: left;
+		margin: 10px;
+		background: #fff;
+		color: #000;
+		font-size: 16px;
+		line-height: 30px;
+		color: #333;
+		font-family: "微软雅黑";
+		box-shadow: 0 0 4px #222;
+	}
+	.wrap .input textarea{
+		border: 0;
+		resize: none;
+		outline: 0;/*点击后取消focus效果*/
+		z-index: 3;
+		margin: 0;
+		padding:5px;
+		height: 170px;
+		width: 420px;
+		/*text-indent: 2em;*/
+	}
+	.wrap .btn{
+		width: 140px;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		float: right;
+		margin:10px;
+		background: #368;
+		box-shadow: 0 0 4px #ccc;
+		border-radius: 5px;
+		color: #fff;
+		cursor: pointer;
+	}
+</style>
+<body>
+	<div class="wrap">
+		<div class="language">
+			<span>自动检测</span>
+			<div class="languages">
+				<ul>
+					<li data-ln="zh">中文</li>
+					<li data-ln="en">英文</li>
+					<li data-ln="yue">粤语</li>
+					<li data-ln="jp">日语</li>
+					<li data-ln="kor">韩语</li>
+					<li data-ln="fra">法语</li>
+					<li data-ln="spa">西班牙语</li>
+					<li data-ln="ru">俄语</li>
+					<li data-ln="pl">波兰语</li>
+					<li data-ln="fin">芬兰语</li>
+				</ul>
+			</div>
+		</div>
+		<div class="input">
+			<textarea name="text" id="text" cols="30" rows="10"></textarea>
+		</div>
+		<div class="show"></div>
+		<span class="translate btn">点击翻译</span>
+		<span class="empty btn">清空</span>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+	<script type="text/javascript" src="js/MD5.js"></script>
+	<script type="text/javascript">
+		var show = document.querySelector('.show');
+		(function(){
+			var text = document.querySelector('#text');
+			var translate = document.querySelector('.translate');
+			var empty = document.querySelector('.empty');
+			var str;/*翻译语言*/
+			var lan = 'en';/*输入文本*/
+			var timer = null;
+			empty.onclick = function(){
+				text.value = '';
+				show.innerHTML = '';
+			}
+			translate.onclick = trans();//点击翻译事件
+			text.onkeydown = function(){
+				clearTimeout(timer);//每次按下键盘时清除定时器
+				timer = setTimeout(function(){//当按下键盘后半秒内自动翻译
+					trans();
+				},1000)
+			}
+			function trans(lanx){
+				if (text.value && text.value.length > 0) {
+					var pat = /[^a-zA-Z0-9\_\s*\u4e00-\u9fa5\u0800-\u4e00]/g;//只允许数字,字母,下划线,空格与汉字,日语
+					var strText = text.value;
+					if (pat.test(strText)===true) {
+						str = strText.replace(pat,'');//把不符合字符集的字符过滤掉
+					}else{
+						str = text.value;
+					}
+					var to = lanx?lanx:lan; //参数查询
+					var appid = '20171022000090094';//访问API账号
+					var key = 'LYzPE5CRS0e5FIwehieC';//访问API密码
+					var query = str;//需要翻译的字符
+					var salt = Date.now();//用当前时间作为随机字符串
+					var str1 = appid+query+salt+key;//拼接MD5
+					var sign = MD5(str1);
+					var from = 'auto';//自动检测输入语言
+					jsonP({
+						url:'http://api.fanyi.baidu.com/api/trans/vip/translate',
+						method:'GET',
+						dataType:'JSONP',
+						data:{
+							q:query,
+							appid:appid,
+							salt:salt,
+							from:from,
+							to:to,
+							sign:sign
+						}
+					})
+				}
+			}
+			function jsonP(opt){
+				opt = opt || {};//判断opt是否存在,如果不存在,就创建一个opt
+				opt.method = opt.method || 'POST';
+				opt.url = opt.url || '';
+				opt.data = opt.data||null;
+				opt.dataType=opt.dataType || 'JSONP';
+				var params = [];
+				for (var key in opt.data) {
+					params.push(key+'='+opt.data[key]);
+				}
+				var postData = params.join('&');//拼接成字符串
+				if(opt.dataType==='JSONP'){
+					createScript(opt.url,postData)
+				}
+			}
+			function createScript(url,data){
+				var oScript = document.createElement('script');
+				oScript.src = url + '?' + data + '&' +'callback=getR';
+				document.body.appendChild(oScript);
+			}
+			choose();
+			function choose(){
+				var $lan = $('.language');
+				var $lans = $('.languages ul li');
+				$lan.click(function(){
+					$('.languages').slideToggle(300);//点击切换
+				});
+				$lans.click(function(){
+					lan = $(this).data('ln');
+					$lan[0].children[0].innerHTML = $(this).text();//[0]对象转换,将jquery转换为js方法
+					trans(lan);
+				})
+			}
+		}) ()
+		function getR(res){
+			show.innerHTML = res.trans_result[0].dst;//将翻译框内容替换为返回的翻译数据(可以先打印返回数据看一下就明白了)
+		}
+	</script>
+	<!-- <script src="http://api.fanyi.baidu.com/api/trans/vip/translate?q=apple&from=en&to=zh&appid=2015063000000001&salt=1435660288&sign=f89f9594663708c1605f3d736d01d2d4&callback=getR"></script> -->
+</body>
+</html>

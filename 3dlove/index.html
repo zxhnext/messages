@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="Keywords" content="">
+		<meta name="Description" content="">
+		<title>3D旋转爱心</title>
+		<style type="text/css">
+			*{
+				margin:0;
+				padding:0;
+			}
+			body{
+				background:#000;
+			}
+			.heart3d{
+				position:absolute;
+				left:0;
+				top:0;
+				right:0;
+				bottom:0;
+				margin:auto;
+				width:100px;
+				height:160px;
+				transform-style:preserve-3d; /*使被转换的子元素保留其 3D 转换*/
+				animation:rot 10s linear infinite;/*css3自定义动画:名称  时间 匀速  无限重复*/
+			}
+			@keyframes rot{
+				to{
+					transform:rotateX(360deg) rotateY(360deg);
+				}
+			}
+			.heart{
+				position:absolute;
+				left:0;
+				top:0;
+				width:100px;
+				height:160px;
+				border:1px solid red;
+				border-left:0;
+				border-bottom:0;
+				border-radius:50% 50% 0/40% 50% 0;
+			}
+			.cube{
+				position:relative;
+				width:50px;
+				height:50px;
+				transform-style:preserve-3d; /*设置3d环境*/
+				transform:translateX(25px) translateY(54px) translateZ(25px); /*设置看它的角度*/
+			}
+			.cube div{
+				position:absolute;
+				width:50px;
+				height:50px;
+			}
+			.cube div:nth-child(1){/*css3结构伪类选择器*/
+				left:0;
+				top:-50px;
+				transform-origin:bottom; /*transform-origin:50% 50% 0;   旋转基点x,y,z*/
+				transform:rotateX(90deg);/*css3变换:X轴旋转90deg*/
+			}
+			.cube div:nth-child(2){
+				left:0;
+				top:50px;
+				transform-origin:top;
+				transform:rotateX(-90deg);
+			}
+			.cube div:nth-child(3){
+				left:-50px;
+				top:0;
+				transform-origin:right;
+				transform:rotateY(-90deg);
+			}
+			.cube div:nth-child(4){
+				left:50px;
+				top:0;
+				transform-origin:left;
+				transform:rotateY(90deg);
+			}
+			.cube div:nth-child(5){
+				left:0;
+				top:0;
+			}
+			.cube div:nth-child(6){
+				left:0;
+				top:0;
+				transform:translateZ(-50px);/*沿着Z轴往里面移动*/
+			}
+			.cube div img{
+				width:50px;
+				height:50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="heart3d">
+			<div class="cube">
+				<div><img src="images/1.jpg"></div>
+				<div><img src="images/2.jpg"></div>
+				<div><img src="images/3.jpg"></div>
+				<div><img src="images/4.jpg"></div>
+				<div><img src="images/5.jpg"></div>
+				<div><img src="images/6.jpg"></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var oHeart = document.getElementsByClassName("heart3d")[0];
+
+			for (var i=0;i<36 ;i++ )
+			{
+				var oDiv = document.createElement("div");
+				oDiv.className = "heart";
+				oDiv.style.transform = "rotateY("+i*10+"deg) rotateZ(45deg) translateX(30px)";
+				oHeart.appendChild(oDiv);
+			}
+		</script>
+	</body>
+</html>

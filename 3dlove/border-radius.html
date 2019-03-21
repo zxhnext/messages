@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="Keywords" content="">
+		<meta name="Description" content="">
+		<title>Document</title>
+		<style type="text/css">
+			div{
+				width:200px;
+				height:200px;
+				margin:100px auto;
+				border:2px solid red;
+				/*border-radius:80% 20% 10%;圆形*/
+				/* 斜杠前面是水平边 后面是竖直边 顺序都是顺时针从左上角开始*/
+				border-radius:50% 20% 10% 30%/30% 10% 20% 50%;
+			}
+			.heart{
+				width:100px;
+				height:160px;
+				border:1px solid red;
+				border-left:0;
+				border-bottom:0;
+				border-radius:50% 50% 0/40% 50% 0;
+				transform:rotate(30deg);
+			}
+		</style>
+	</head>
+	<body>
+		<div></div>
+		<div class="heart"></div>
+	</body>
+</html>

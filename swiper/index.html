@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>swiper插件</title>
+	<style type="text/css">
+		*{margin:0;padding:0;l}
+		li{list-style: none}
+		.container{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			width: 100%;
+			height: 100vh;
+		}
+		.container .bg_pic{
+			width: 100%;
+			height: 100%;
+		}
+		.container .bg_pic img{
+			display: block;
+			width: 100%;
+			height:100vh;
+			filter:blur(20px);/*css3模糊滤镜*/
+		}
+		.container .swiper{
+			position: absolute;
+			width: 100vw;
+			height: 60vh;
+			overflow: hidden;
+		}
+		.swiper ul{
+			width: 500%;
+			height: 60vh;
+			transform: translate();
+		}
+		.swiper ul li{
+			width: 100vw;
+			height: 60vh;
+			float: left;
+		}
+		.swiper ul li img{
+			display: flex;
+			width: 60%;
+			height: 90%;
+			margin:0 auto;
+		}
+	</style>
+</head>
+<body>
+	<section class="container">
+		<section class="bg_pic">
+			<img src="images/bg1.png">
+		</section>
+		<section class="swiper">
+			<ul>
+				<li><img src="images/bg1.png"></li>
+				<li><img src="images/bg2.png"></li>
+				<li><img src="images/bg3.png"></li>
+				<li><img src="images/bg4.png"></li>
+				<li><img src="images/bg5.png"></li>
+			</ul>
+		</section>
+	</section>
+	<script type="text/javascript">
+		(function(){
+			var oSwiper = document.querySelector('.swiper');
+			var oUl = oSwiper.querySelector('ul');
+			var aLi = oUl.querySelectorAll('li');
+			var startX = 0; //手指X位置初始化
+			var startPoint = 0; // 初始化手指对象
+			var length = aLi.length;
+			var num = 0; //初始化显示第几张
+			var wW = oSwiper.offsetWidth; //获取当前一屏宽度
+			init();
+			function init(){
+				oUl.style.width = length + '00%';
+				cssTransform(oUl,'translateX',0); //初始化ul的translateX位置
+				cssTransform(oUl,'translateZ',0); //初始化水平仪位置 (兼容用的)
+			}
+
+			oSwiper.addEventListener('touchstart',function(e){
+				oUl.style.transition = '';
+				startPoint = e.changedTouches[0]; //捕获切换后的第一个手指
+				startX = cssTransform(oUl,'translateX') //存储当前translateX值
+			},false);
+
+			oSwiper.addEventListener('touchmove',function(e){
+				var nowPoint = e.changedTouches[0];
+				var disX = nowPoint.pageX - startPoint.pageX; //移动量
+				var translateX = startX + disX; //获取当前translateX值
+				cssTransform(oUl,'translateX',translateX);
+			},false);
+
+			oSwiper.addEventListener('touchend',function(e){
+				var l = cssTransform(oUl,'translateX');
+				num = Math.round(-l/wW); //当前当前translateX值/一屏宽度,以此判断当前是哪一张图片
+				autoPlay();
+			},false);
+
+			function autoPlay(){
+				oUl.style.transition = '0.5s';
+				cssTransform(oUl,'translateX',-num*wW);
+			}
+			//transform样式操作封装
+			function cssTransform(obj,attr,val){//对象,属性,值
+				obj.transform = obj.transform || {};//初始化
+				if (arguments.length === 3) {//设置属性
+					obj.transform[attr] = val;//把val是指给obj下面的transform属性的attr属性
+					var strVal = '';
+					for (var key in obj.transform) {
+						strVal += key+'('+obj.transform[key]+'px)';
+					}
+					obj.style.transform = strVal;
+				}else if(arguments.length === 2){
+					val = obj.transform[attr];
+					if (typeof val === 'undefined') {
+						val = 0;
+					}
+					return val;
+				}
+			}
+		})()
+	</script>
+</body>
+</html>
+
+<!--
+touchstart 手指触碰开始 按下
+touchmove 手指触碰移动 移动
+touchend 手指触控结束 开始
+移动端不允许事件绑定,只可以事件监听
+-->
